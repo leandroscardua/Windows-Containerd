@@ -2,7 +2,7 @@ $ErrorActionPreference = 'Stop'
 
 Write-Host "Checking the latest version of containerd"
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-$tag = (Invoke-WebRequest "https://api.github.com/repos/containerd/containerd/releases/latest" | ConvertFrom-Json)[0].tag_name
+$tag = (Invoke-WebRequest -UseBasicParsing "https://api.github.com/repos/containerd/containerd/releases/latest" | ConvertFrom-Json)[0].tag_name
 
 $destination="$Env:ProgramFiles\containerd\"
 Write-Host "Creating folder on $destination"
