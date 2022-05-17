@@ -4,7 +4,7 @@ Write-Host "Checking the latest version of containerd"
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 $tag = (Invoke-WebRequest "https://api.github.com/repos/containerd/containerd/releases/latest" | ConvertFrom-Json)[0].tag_name
 
-$destination="$env:HOMEDRIVE\containerd"
+$destination="$Env:ProgramFiles\containerd\"
 Write-Host "Creating folder on $destination"
 mkdir -force $destination | Out-Null
 cd $destination
