@@ -5,10 +5,10 @@ Write-Host "Checking the latest version of containerd and Windows CNI"
 $tagcd = (Invoke-WebRequest -UseBasicParsing "https://api.github.com/repos/containerd/containerd/releases/latest" | ConvertFrom-Json)[0].tag_name
 $tagcni = (Invoke-WebRequest -UseBasicParsing "https://api.github.com/repos/microsoft/windows-container-networking/releases/latest" | ConvertFrom-Json)[0].tag_name
 
-$destination="$Env:ProgramFiles\containerd\"
+$destination="$Env:ProgramFiles\containerd"
 Write-Host "Creating folder on $destination"
 mkdir -force $destination | Out-Null
-cd $destination
+Set-Location $destination
 
 $dlw = $tagcd -replace "v",""
 Write-Host "Downloading ContainerD to $destination"
@@ -24,8 +24,10 @@ Write-Host "creating containerd config file"
 
 .\containerd.exe config default | Out-File config.toml -Encoding ascii
 
-Write-Host "Downloading Windows CNI to $destination"
-Invoke-WebRequest "https://github.com/microsoft/windows-container-networking/releases/download/$tagcni/windows-container-networking-cni-amd64-$tagcni.zip" -UseBasicParsing -OutFile $destination\cni\bin\windows-container-networking-cni-amd64-$tagcni.zip
+Write-Host "Downloading Windows CNI to $destination\cni\bin"
+mkdir -force $destination\cni\bin | Out-Null
+Set-Location $destination\cni\bin 
+Invoke-WebRequest "https://github.com/microsoft/windows-container-networking/releases/download/$tagcni/windows-container-networking-cni-amd64-$tagcni.zip" -UseBasicParsing -OutFile "$destination\cni\bin\windows-container-networking-cni-amd64-$tagcni.zip"
                    
 Write-Host "Saving Windows CNI on $destination"
 
