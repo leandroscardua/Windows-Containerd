@@ -35,14 +35,10 @@ tar.exe -xf $destination\cni\bin\windows-container-networking-cni-amd64-$tagcni.
 
 Write-Host "Registering containerd"
 
+Set-Location $destination
+
 .\containerd.exe --register-service
 
 Write-Host "starting containerd"
 
 Start-Service containerd
-
-Write-Host "Cleaning up containerd folder"
-
-Remove-Item containerd-$dlw-windows-amd64.tar.gz
-
-Remove-item -Path .\bin -Recurse
