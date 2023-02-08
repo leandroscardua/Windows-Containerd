@@ -1,6 +1,6 @@
 $ErrorActionPreference = 'Stop'
 
-Write-Host "Checking for the Windows Feature is already installed"
+Write-Host "Checking for the Windows Feature is already installed" -ForegroundColor DarkCyan
 
 $feature = Get-WindowsFeature -Name Containers
 
@@ -26,7 +26,7 @@ $dlw = $tagcd -replace "v",""
 Write-Host "Downloading ContainerD to $destination" -ForegroundColor DarkCyan
 Invoke-WebRequest "https://github.com/containerd/containerd/releases/download/$tagcd/containerd-$dlw-windows-amd64.tar.gz" -UseBasicParsing -OutFile $destination\containerd-$dlw-windows-amd64.tar.gz
 
-Write-Host "Saving containerd on $destination"
+Write-Host "Saving containerd on $destination" -ForegroundColor DarkCyan
 
 tar.exe -xf .\containerd-$dlw-windows-amd64.tar.gz
 
@@ -47,6 +47,7 @@ tar.exe -xf $destination\cni\bin\windows-container-networking-cni-amd64-$tagcni.
 
 $dlwn = $tagnerdctl -replace "v",""
 Write-Host "Downloading nerdctl to $destination" -ForegroundColor DarkCyan
+Set-Location $destination
 Invoke-WebRequest "https://github.com/containerd/nerdctl/releases/download/$tagnerdctl/nerdctl-$dlwn-windows-amd64.tar.gz" -UseBasicParsing -OutFile $destination\nerdctl-$dlwn-windows-amd64.tar.gz
 
 Write-Host "Saving nerdctl on $destination" -ForegroundColor DarkCyan
