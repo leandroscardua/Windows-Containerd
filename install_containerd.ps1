@@ -4,7 +4,7 @@ $ErrorActionPreference = 'Stop'
 
 # download this script
 # curl.exe -LO https://raw.githubusercontent.com/leandroscardua/Windows-Containerd/master/install_containerd.ps1
-# .\install_containerd_nerdctl.ps1
+# .\install_containerd.ps1
 #
 
 Write-Host "Checking for the Windows Feature is already installed" -ForegroundColor DarkCyan
@@ -23,6 +23,11 @@ Write-Host "Checking the latest version of containerd and Windows CNI" -Foregrou
 $tagcd = (Invoke-WebRequest -UseBasicParsing "https://api.github.com/repos/containerd/containerd/releases/latest" | ConvertFrom-Json)[0].tag_name
 $tagcni = (Invoke-WebRequest -UseBasicParsing "https://api.github.com/repos/microsoft/windows-container-networking/releases/latest" | ConvertFrom-Json)[0].tag_name
 $tagnerdctl = (Invoke-WebRequest -UseBasicParsing "https://api.github.com/repos/containerd/nerdctl/releases/latest" | ConvertFrom-Json)[0].tag_name
+$subnet='10.0.0.0/16'
+$gateway='10.0.0.1'
+$tagcniversion = $tagcni -replace "v",""
+$tagcdversion = $tagcd -replace "v",""
+$tagnerdctlversion = $tagnerdctl -replace "v",""
 
 $destination="$Env:ProgramFiles\containerd"
 Write-Host "Creating folder on $destination" -ForegroundColor DarkCyan
