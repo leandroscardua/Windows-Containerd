@@ -34,9 +34,9 @@ Write-Host "Creating folder on $destination" -ForegroundColor DarkCyan
 mkdir -force $destination | Out-Null
 Set-Location $destination
 
-# $dlw = $tagcd -replace "v",""
+ $dlw = $tagcd -replace "v",""
 # Write-Host "Downloading ContainerD to $destination" -ForegroundColor DarkCyan
-# Invoke-WebRequest "https://github.com/containerd/containerd/releases/download/$tagcd/containerd-$dlw-windows-amd64.tar.gz" -UseBasicParsing -OutFile $destination\containerd-$dlw-windows-amd64.tar.gz
+Invoke-WebRequest "https://github.com/containerd/containerd/releases/download/$tagcd/containerd-$dlw-windows-amd64.tar.gz" -UseBasicParsing -OutFile $destination\containerd-$dlw-windows-amd64.tar.gz
 
 # Write-Host "Saving containerd on $destination" -ForegroundColor DarkCyan
 
@@ -51,7 +51,8 @@ Set-Location $destination
 Write-Output "Getting ContainerD binaries" -ForegroundColor DarkCyan
 $global:ContainerDPath = "$env:ProgramFiles\containerd"
 mkdir -Force $global:ContainerDPath | Out-Null
-DownloadFile "$global:ContainerDPath\containerd.tar.gz" https://github.com/containerd/containerd/releases/download/$tagcd/containerd-$tagcdversion-windows-amd64.tar.gz
+#DownloadFile "$global:ContainerDPath\containerd.tar.gz" https://github.com/containerd/containerd/releases/download/$tagcd/containerd-$tagcdversion-windows-amd64.tar.gz
+Invoke-WebRequest "https://github.com/containerd/containerd/releases/download/$tagcd/containerd-$dlw-windows-amd64.tar.gz" -UseBasicParsing -OutFile $destination\containerd-$dlw-windows-amd64.tar.gz
 tar.exe -xvf "$global:ContainerDPath\containerd.tar.gz" --strip=1 -C $global:ContainerDPath
 $env:Path += ";$global:ContainerDPath"
 [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
