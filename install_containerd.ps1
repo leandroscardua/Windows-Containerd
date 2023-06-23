@@ -4,11 +4,11 @@ Write-Host "Checking for the Windows Feature is already installed" -ForegroundCo
 
 $feature = Get-WindowsFeature -Name Containers
 
-if($feature.Installed -eq 'True')
-{Write-Host "Installed" -ForegroundColor DarkGreen}
-else
-{Write-Host "Please, Install Windows Feature and run the script again. (Install-WindowsFeature -Name Containers)" -ForegroundColor DarkRed
- exit
+if($feature.Installed -eq 'True') {
+Write-Host "Installed" -ForegroundColor DarkGreen
+}else{
+Write-Host "Please, Install Windows Feature and run the script again. (Install-WindowsFeature -Name Containers)" -ForegroundColor DarkRed
+exit
 }
 
 Write-Host "Checking the latest version of containerd and Windows CNI" -ForegroundColor DarkCyan 
