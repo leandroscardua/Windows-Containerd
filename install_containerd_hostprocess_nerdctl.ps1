@@ -3,7 +3,7 @@
 $ErrorActionPreference = 'Stop'
 
 # download this script
-# curl.exe -LO https://raw.githubusercontent.com/leandroscardua/Windows-Containerd/master/install_containerd_nerdctl.ps1
+# curl.exe -LO https://raw.githubusercontent.com/leandroscardua/Windows-Containerd/master/install_containerd_hostprocess_nerdctl.ps1
 # .\install_containerd_nerdctl.ps1
 #
 

@@ -2,6 +2,11 @@
 
 $ErrorActionPreference = 'Stop'
 
+# download this script
+# curl.exe -LO https://raw.githubusercontent.com/leandroscardua/Windows-Containerd/master/install_containerd.ps1
+# .\install_containerd_nerdctl.ps1
+#
+
 Write-Host "Checking for the Windows Feature is already installed" -ForegroundColor DarkCyan
 
 $feature = Get-WindowsFeature -Name Containers
@@ -65,3 +70,39 @@ Set-Location $destination
 Write-Host "starting containerd" -ForegroundColor DarkCyan
 
 Start-Service containerd
+
+Write-Host "Install HNS Powershell Module" -ForegroundColor DarkCyan
+
+curl.exe -LO 'https://raw.githubusercontent.com/microsoft/SDN/master/Kubernetes/windows/hns.psm1'
+Import-Module .\hns.psm1
+
+Write-Host "Create New NAT Network" -ForegroundColor DarkCyan
+
+New-HnsNetwork -Type NAT -AddressPrefix $subnet -Gateway $gateway -Name "nat"
+
+Write-Host "Configure network on nerdctl" -ForegroundColor DarkCyan
+
+@"
+{
+    "cniVersion": "$tagcniversion",
+    "name": "nat",
+    "type": "nat",
+    "master": "Ethernet",
+    "ipam": {
+        "subnet": "$subnet",
+        "routes": [
+            {
+                "gateway": "$gateway"
+            }
+        ]
+    },
+    "capabilities": {
+        "portMappings": true,
+        "dns": true
+    }
+}
+"@ | Set-Content "$env:ProgramFiles\containerd\cni\conf\0-containerd-nat.conf" -Force
+#Remove-Item "$env:ProgramFiles\containerd\cni\conf\nerdctl-nat.conflist" -Force
+
+
+.\nerdctl.exe network ls
