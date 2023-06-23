@@ -1,4 +1,11 @@
+#Requires -RunAsAdministrator
+
 $ErrorActionPreference = 'Stop'
+
+# download this script
+# curl.exe -LO https://raw.githubusercontent.com/leandroscardua/Windows-Containerd/master/install_containerd_nerdctl.ps1
+# .\install_containerd_nerdctl.ps1
+#
 
 Write-Host "Checking for the Windows Feature is already installed" -ForegroundColor DarkCyan
 

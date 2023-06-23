@@ -1,3 +1,5 @@
+#Requires -RunAsAdministrator
+
 $ErrorActionPreference = 'Stop'
 
 Write-Host "Checking for the Windows Feature is already installed" -ForegroundColor DarkCyan
