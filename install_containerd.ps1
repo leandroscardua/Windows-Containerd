@@ -110,4 +110,4 @@ Write-Host "Configure network on nerdctl" -ForegroundColor DarkCyan
 #Remove-Item "$env:ProgramFiles\containerd\cni\conf\nerdctl-nat.conflist" -Force
 
 
-.\nerdctl.exe network ls
+.\nerdctl.exe run --net nat mcr.microsoft.com/windows/nanoserver:ltsc2022
