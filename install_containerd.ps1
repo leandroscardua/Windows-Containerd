@@ -34,19 +34,42 @@ Write-Host "Creating folder on $destination" -ForegroundColor DarkCyan
 mkdir -force $destination | Out-Null
 Set-Location $destination
 
-$dlw = $tagcd -replace "v",""
-Write-Host "Downloading ContainerD to $destination" -ForegroundColor DarkCyan
-Invoke-WebRequest "https://github.com/containerd/containerd/releases/download/$tagcd/containerd-$dlw-windows-amd64.tar.gz" -UseBasicParsing -OutFile $destination\containerd-$dlw-windows-amd64.tar.gz
+# $dlw = $tagcd -replace "v",""
+# Write-Host "Downloading ContainerD to $destination" -ForegroundColor DarkCyan
+# Invoke-WebRequest "https://github.com/containerd/containerd/releases/download/$tagcd/containerd-$dlw-windows-amd64.tar.gz" -UseBasicParsing -OutFile $destination\containerd-$dlw-windows-amd64.tar.gz
 
-Write-Host "Saving containerd on $destination" -ForegroundColor DarkCyan
+# Write-Host "Saving containerd on $destination" -ForegroundColor DarkCyan
 
-tar.exe -xf .\containerd-$dlw-windows-amd64.tar.gz
+# tar.exe -xf .\containerd-$dlw-windows-amd64.tar.gz
 
-Copy-Item -Path "$destination\bin\*" -Destination $destination -Recurse -Force
+# Copy-Item -Path "$destination\bin\*" -Destination $destination -Recurse -Force
 
-Write-Host "creating containerd config file" -ForegroundColor DarkCyan
+# Write-Host "creating containerd config file" -ForegroundColor DarkCyan
 
-.\containerd.exe config default | Out-File config.toml -Encoding ascii
+# .\containerd.exe config default | Out-File config.toml -Encoding ascii
+
+Write-Output "Getting ContainerD binaries" -ForegroundColor DarkCyan
+$global:ContainerDPath = "$env:ProgramFiles\containerd"
+mkdir -Force $global:ContainerDPath | Out-Null
+DownloadFile "$global:ContainerDPath\containerd.tar.gz" https://github.com/containerd/containerd/releases/download/$tagcd/containerd-$tagcdversion-windows-amd64.tar.gz
+tar.exe -xvf "$global:ContainerDPath\containerd.tar.gz" --strip=1 -C $global:ContainerDPath
+$env:Path += ";$global:ContainerDPath"
+[Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
+containerd.exe config default | Out-File "$global:ContainerDPath\config.toml" -Encoding ascii
+#config file fixups
+$config = Get-Content "$global:ContainerDPath\config.toml"
+$config = $config -replace "bin_dir = (.)*$", "bin_dir = `"$CNIBinPath`""
+$config = $config -replace "conf_dir = (.)*$", "conf_dir = `"$CNIConfigPath`""
+$config | Set-Content "$global:ContainerDPath\config.toml" -Force
+
+mkdir -Force $CNIBinPath | Out-Null
+mkdir -Force $CNIConfigPath | Out-Null
+
+Write-Output "Registering ContainerD as a service"
+containerd.exe --register-service
+
+Write-Output "Starting ContainerD service"
+Start-Service containerd
 
 Write-Host "Downloading Windows CNI to $destination\cni\bin" -ForegroundColor DarkCyan
 mkdir -force $destination\cni\bin | Out-Null
@@ -111,3 +134,4 @@ Write-Host "Configure network on nerdctl" -ForegroundColor DarkCyan
 
 
 .\nerdctl.exe run --net nat mcr.microsoft.com/windows/nanoserver:ltsc2022
+
