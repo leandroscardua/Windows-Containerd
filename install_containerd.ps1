@@ -25,6 +25,8 @@ $tagcni = (Invoke-WebRequest -UseBasicParsing "https://api.github.com/repos/micr
 $tagnerdctl = (Invoke-WebRequest -UseBasicParsing "https://api.github.com/repos/containerd/nerdctl/releases/latest" | ConvertFrom-Json)[0].tag_name
 $subnet='10.0.0.0/16'
 $gateway='10.0.0.1'
+$tagcniversion = $tagcni -replace "v",""
+$tagcdversion = $tagcd -replace "v",""
 $tagnerdctlversion = $tagnerdctl -replace "v",""
 
 $destination="$Env:ProgramFiles\containerd"
