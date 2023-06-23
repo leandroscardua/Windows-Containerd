@@ -28,6 +28,9 @@ $gateway='10.0.0.1'
 $tagcniversion = $tagcni -replace "v",""
 $tagcdversion = $tagcd -replace "v",""
 $tagnerdctlversion = $tagnerdctl -replace "v",""
+$CNIBinPath = "c:/opt/cni/bin"
+$CNIConfigPath = "c:/etc/cni/net.d"
+
 
 $destination="$Env:ProgramFiles\containerd"
 Write-Host "Creating folder on $destination" -ForegroundColor DarkCyan
