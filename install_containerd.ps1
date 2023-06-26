@@ -61,7 +61,7 @@ function DownloadFile($destination, $source) {
     }
 }
 
-Write-Output "Getting ContainerD binaries" -ForegroundColor DarkCyan
+Write-Host  "Getting ContainerD binaries" -ForegroundColor DarkCyan
 $global:ContainerDPath = "$env:ProgramFiles\containerd"
 mkdir -Force $global:ContainerDPath | Out-Null
 DownloadFile "$global:ContainerDPath\containerd.tar.gz" https://github.com/containerd/containerd/releases/download/$tagcd/containerd-$tagcdversion-windows-amd64.tar.gz
@@ -78,10 +78,10 @@ $config | Set-Content "$global:ContainerDPath\config.toml" -Force
 mkdir -Force $CNIBinPath | Out-Null
 mkdir -Force $CNIConfigPath | Out-Null
 
-Write-Output "Registering ContainerD as a service"
+Write-Host "Registering ContainerD as a service" -ForegroundColor DarkCyan
 containerd.exe --register-service
 
-Write-Output "Starting ContainerD service"
+Write-Host "Starting ContainerD service" -ForegroundColor DarkCyan
 Start-Service containerd
 
 Write-Host "Downloading Windows CNI to $destination\cni\bin" -ForegroundColor DarkCyan
@@ -93,37 +93,37 @@ Write-Host "Saving Windows CNI on $destination" -ForegroundColor DarkCyan
 
 tar.exe -xf $destination\cni\bin\windows-container-networking-cni-amd64-$tagcni.zip
 
-$dlwn = $tagnerdctl -replace "v",""
-Write-Host "Downloading nerdctl to $destination" -ForegroundColor DarkCyan
-Set-Location $destination
-Invoke-WebRequest "https://github.com/containerd/nerdctl/releases/download/$tagnerdctl/nerdctl-$dlwn-windows-amd64.tar.gz" -UseBasicParsing -OutFile $destination\nerdctl-$dlwn-windows-amd64.tar.gz
+#$dlwn = $tagnerdctl -replace "v",""
+#Write-Host "Downloading nerdctl to $destination" -ForegroundColor DarkCyan
+#Set-Location $destination
+#Invoke-WebRequest "https://github.com/containerd/nerdctl/releases/download/$tagnerdctl/nerdctl-$dlwn-windows-amd64.tar.gz" -UseBasicParsing -OutFile $destination\nerdctl-$dlwn-windows-amd64.tar.gz
 
-Write-Host "Saving nerdctl on $destination" -ForegroundColor DarkCyan
+#Write-Host "Saving nerdctl on $destination" -ForegroundColor DarkCyan
 
-tar.exe -xf $destination\nerdctl-$dlwn-windows-amd64.tar.gz
+#tar.exe -xf $destination\nerdctl-$dlwn-windows-amd64.tar.gz
 
-Write-Host "Registering containerd" -ForegroundColor DarkCyan
+#Write-Host "Registering containerd" -ForegroundColor DarkCyan
 
-Set-Location $destination
+#Set-Location $destination
 
-.\containerd.exe --register-service
+#\containerd.exe --register-service
 
-Write-Host "starting containerd" -ForegroundColor DarkCyan
+#Write-Host "starting containerd" -ForegroundColor DarkCyan
 
-Start-Service containerd
+#Start-Service containerd
 
-#Write-Host "Install HNS Powershell Module" -ForegroundColor DarkCyan
+Write-Host "Install HNS Powershell Module" -ForegroundColor DarkCyan
 
-#curl.exe -LO 'https://raw.githubusercontent.com/microsoft/SDN/master/Kubernetes/windows/hns.psm1'
-#Import-Module .\hns.psm1
+curl.exe -LO 'https://raw.githubusercontent.com/microsoft/SDN/master/Kubernetes/windows/hns.psm1'
+Import-Module .\hns.psm1
 
 Write-Host "Create New NAT Network" -ForegroundColor DarkCyan
 
-.\nerdctl network create nat --driver nat --subnet=$subnet --gateway=$gateway -o parent=Ethernet
+#.\nerdctl network create nat --driver nat --subnet=$subnet --gateway=$gateway -o parent=Ethernet
 
-#New-HnsNetwork -Type NAT -AddressPrefix $subnet -Gateway $gateway -Name "nat"
+New-HnsNetwork -Type NAT -AddressPrefix $subnet -Gateway $gateway -Name "nat"
 
-# Write-Host "Configure network on nerdctl" -ForegroundColor DarkCyan
+ Write-Host "Configure network on nerdctl" -ForegroundColor DarkCyan
 
 # @"
 # {
