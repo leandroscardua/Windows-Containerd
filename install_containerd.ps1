@@ -148,5 +148,5 @@ Write-Host "Create New NAT Network" -ForegroundColor DarkCyan
 # #Remove-Item "$env:ProgramFiles\containerd\cni\conf\nerdctl-nat.conflist" -Force
 
 
-.\nerdctl.exe run --net nat mcr.microsoft.com/windows/nanoserver:ltsc2022
+#.\nerdctl.exe run --net nat mcr.microsoft.com/windows/nanoserver:ltsc2022
 
