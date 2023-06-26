@@ -112,38 +112,40 @@ Write-Host "starting containerd" -ForegroundColor DarkCyan
 
 Start-Service containerd
 
-Write-Host "Install HNS Powershell Module" -ForegroundColor DarkCyan
+#Write-Host "Install HNS Powershell Module" -ForegroundColor DarkCyan
 
-curl.exe -LO 'https://raw.githubusercontent.com/microsoft/SDN/master/Kubernetes/windows/hns.psm1'
-Import-Module .\hns.psm1
+#curl.exe -LO 'https://raw.githubusercontent.com/microsoft/SDN/master/Kubernetes/windows/hns.psm1'
+#Import-Module .\hns.psm1
 
 Write-Host "Create New NAT Network" -ForegroundColor DarkCyan
 
-New-HnsNetwork -Type NAT -AddressPrefix $subnet -Gateway $gateway -Name "nat"
+nerdctl network create nat --driver nat --subnet=$subnet --gateway=$gateway -o parent=Ethernet
 
-Write-Host "Configure network on nerdctl" -ForegroundColor DarkCyan
+#New-HnsNetwork -Type NAT -AddressPrefix $subnet -Gateway $gateway -Name "nat"
 
-@"
-{
-    "cniVersion": "$tagcniversion",
-    "name": "nat",
-    "type": "nat",
-    "master": "Ethernet",
-    "ipam": {
-        "subnet": "$subnet",
-        "routes": [
-            {
-                "gateway": "$gateway"
-            }
-        ]
-    },
-    "capabilities": {
-        "portMappings": true,
-        "dns": true
-    }
-}
-"@ | Set-Content "$env:ProgramFiles\containerd\cni\conf\0-containerd-nat.conf" -Force
-#Remove-Item "$env:ProgramFiles\containerd\cni\conf\nerdctl-nat.conflist" -Force
+# Write-Host "Configure network on nerdctl" -ForegroundColor DarkCyan
+
+# @"
+# {
+#     "cniVersion": "$tagcniversion",
+#     "name": "nat",
+#     "type": "nat",
+#     "master": "Ethernet",
+#     "ipam": {
+#         "subnet": "$subnet",
+#         "routes": [
+#             {
+#                 "gateway": "$gateway"
+#             }
+#         ]
+#     },
+#     "capabilities": {
+#         "portMappings": true,
+#         "dns": true
+#     }
+# }
+# "@ | Set-Content "$env:ProgramFiles\containerd\cni\conf\0-containerd-nat.conf" -Force
+# #Remove-Item "$env:ProgramFiles\containerd\cni\conf\nerdctl-nat.conflist" -Force
 
 
 .\nerdctl.exe run --net nat mcr.microsoft.com/windows/nanoserver:ltsc2022
