@@ -93,24 +93,14 @@ Write-Host "Saving Windows CNI on $destination" -ForegroundColor DarkCyan
 
 tar.exe -xf $destination\cni\bin\windows-container-networking-cni-amd64-$tagcni.zip
 
-#$dlwn = $tagnerdctl -replace "v",""
-#Write-Host "Downloading nerdctl to $destination" -ForegroundColor DarkCyan
-#Set-Location $destination
-#Invoke-WebRequest "https://github.com/containerd/nerdctl/releases/download/$tagnerdctl/nerdctl-$dlwn-windows-amd64.tar.gz" -UseBasicParsing -OutFile $destination\nerdctl-$dlwn-windows-amd64.tar.gz
+$dlwn = $tagnerdctl -replace "v",""
+Write-Host "Downloading nerdctl to $destination" -ForegroundColor DarkCyan
+Set-Location $destination
+Invoke-WebRequest "https://github.com/containerd/nerdctl/releases/download/$tagnerdctl/nerdctl-$dlwn-windows-amd64.tar.gz" -UseBasicParsing -OutFile $destination\nerdctl-$dlwn-windows-amd64.tar.gz
 
-#Write-Host "Saving nerdctl on $destination" -ForegroundColor DarkCyan
+Write-Host "Saving nerdctl on $destination" -ForegroundColor DarkCyan
 
-#tar.exe -xf $destination\nerdctl-$dlwn-windows-amd64.tar.gz
-
-#Write-Host "Registering containerd" -ForegroundColor DarkCyan
-
-#Set-Location $destination
-
-#\containerd.exe --register-service
-
-#Write-Host "starting containerd" -ForegroundColor DarkCyan
-
-#Start-Service containerd
+tar.exe -xf $destination\nerdctl-$dlwn-windows-amd64.tar.gz
 
 Write-Host "Install HNS Powershell Module" -ForegroundColor DarkCyan
 
