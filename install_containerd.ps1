@@ -119,7 +119,7 @@ Start-Service containerd
 
 Write-Host "Create New NAT Network" -ForegroundColor DarkCyan
 
-nerdctl network create nat --driver nat --subnet=$subnet --gateway=$gateway -o parent=Ethernet
+.\nerdctl network create nat --driver nat --subnet=$subnet --gateway=$gateway -o parent=Ethernet
 
 #New-HnsNetwork -Type NAT -AddressPrefix $subnet -Gateway $gateway -Name "nat"
 
