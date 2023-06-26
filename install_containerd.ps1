@@ -113,7 +113,7 @@ Write-Host "Create New NAT Network" -ForegroundColor DarkCyan
 
 New-HnsNetwork -Type NAT -AddressPrefix $subnet -Gateway $gateway -Name "nat"
 
- Write-Host "Configure network on nerdctl" -ForegroundColor DarkCyan
+# Write-Host "Configure network on nerdctl" -ForegroundColor DarkCyan
 
 # @"
 # {
