@@ -113,7 +113,34 @@ Write-Host "Create New NAT Network" -ForegroundColor DarkCyan
 
 New-HnsNetwork -Type NAT -AddressPrefix $subnet -Gateway $gateway -Name "nat"
 
-# Write-Host "Configure network on nerdctl" -ForegroundColor DarkCyan
+
+Write-Host "Downlaod Image" -ForegroundColor DarkCyan
+
+.\nerdctl.exe pull mcr.microsoft.com/windows/nanoserver:ltsc2022
+
+Write-Host "Configure network on nerdctl" -ForegroundColor DarkCyan
+
+@"
+{
+    "cniVersion": "$tagcniversion",
+    "name": "nat",
+    "type": "nat",
+    "master": "Ethernet",
+    "ipam": {
+        "subnet": "$subnet",
+        "routes": [
+            {
+                "gateway": "$gateway"
+            }
+        ]
+    },
+    "capabilities": {
+        "portMappings": true,
+        "dns": true
+    }
+}
+"@ | Set-Content "$env:ProgramFiles\containerd\cni\conf\0-containerd-nat.conf" -Force
+
 
 # @"
 # {
@@ -135,8 +162,8 @@ New-HnsNetwork -Type NAT -AddressPrefix $subnet -Gateway $gateway -Name "nat"
 #     }
 # }
 # "@ | Set-Content "$env:ProgramFiles\containerd\cni\conf\0-containerd-nat.conf" -Force
+
 # #Remove-Item "$env:ProgramFiles\containerd\cni\conf\nerdctl-nat.conflist" -Force
 
 
 #.\nerdctl.exe run --net nat mcr.microsoft.com/windows/nanoserver:ltsc2022
-
