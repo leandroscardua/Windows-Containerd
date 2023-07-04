@@ -23,11 +23,14 @@ Write-Host "Checking the latest version of containerd and Windows CNI" -Foregrou
 $tagcd = (Invoke-WebRequest -UseBasicParsing "https://api.github.com/repos/containerd/containerd/releases/latest" | ConvertFrom-Json)[0].tag_name
 $tagcni = (Invoke-WebRequest -UseBasicParsing "https://api.github.com/repos/microsoft/windows-container-networking/releases/latest" | ConvertFrom-Json)[0].tag_name
 $tagnerdctl = (Invoke-WebRequest -UseBasicParsing "https://api.github.com/repos/containerd/nerdctl/releases/latest" | ConvertFrom-Json)[0].tag_name
-$subnet='10.0.0.0/16'
+$subnet='10.0.0.0/24'
 $gateway='10.0.0.1'
-$tagcniversion = $tagcni -replace "v",""
-$tagcdversion = $tagcd -replace "v",""
-$tagnerdctlversion = $tagnerdctl -replace "v",""
+# $tagcniversion = $tagcni -replace "v",""
+# $tagcdversion = $tagcd -replace "v",""
+# $tagnerdctlversion = $tagnerdctl -replace "v",""
+$tagcniversion = "0.3.0"
+$tagcdversion = "1.6.6"
+$tagnerdctlversion = "0.21.0"
 $CNIBinPath = "c:/opt/cni/bin"
 $CNIConfigPath = "c:/etc/cni/net.d"
 
@@ -119,6 +122,8 @@ Write-Host "Downlaod Image" -ForegroundColor DarkCyan
 .\nerdctl.exe pull mcr.microsoft.com/windows/nanoserver:ltsc2022
 
 Write-Host "Configure network on nerdctl" -ForegroundColor DarkCyan
+
+mkdir -Force "$env:ProgramFiles\containerd\cni\conf\"| Out-Null
 
 @"
 {
