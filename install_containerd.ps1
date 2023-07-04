@@ -29,11 +29,11 @@ $gateway='10.0.0.1'
 # $tagcdversion = $tagcd -replace "v",""
 # $tagnerdctlversion = $tagnerdctl -replace "v",""
 $tagcniversion = "0.3.0"
-$tagcdversion = "1.6.8"
-$tagnerdctlversion = "1.0.0"
-$tagcd = "v1.6.8"
+$tagcdversion = "1.6.16"
+$tagnerdctlversion = "1.2.0"
+$tagcd = "v1.6.16"
 $tagcni = "v0.3.0"
-$tagnerdctl = "v1.0.0"
+$tagnerdctl = "v1.2.0"
 $CNIBinPath = "c:/opt/cni/bin"
 $CNIConfigPath = "c:/etc/cni/net.d"
 
@@ -175,3 +175,5 @@ mkdir -Force "$env:ProgramFiles\containerd\cni\conf\"| Out-Null
 
 
 #.\nerdctl.exe run --net nat mcr.microsoft.com/windows/nanoserver:ltsc2022
+
+#nerdctl.exe run -it --net nat mcr.microsoft.com/windows/nanoserver:ltsc2022
