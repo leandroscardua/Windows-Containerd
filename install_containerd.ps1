@@ -119,7 +119,6 @@ Write-Host "Create New NAT Network" -ForegroundColor DarkCyan
 
 New-HnsNetwork -Type NAT -AddressPrefix $subnet -Gateway $gateway -Name "nat"
 
-
 Write-Host "Downlaod Image" -ForegroundColor DarkCyan
 
 .\nerdctl.exe pull mcr.microsoft.com/windows/nanoserver:ltsc2022
@@ -176,4 +175,4 @@ mkdir -Force "$env:ProgramFiles\containerd\cni\conf\"| Out-Null
 
 #.\nerdctl.exe run --net nat mcr.microsoft.com/windows/nanoserver:ltsc2022
 
-#nerdctl.exe run -it --net nat mcr.microsoft.com/windows/nanoserver:ltsc2022
+nerdctl.exe run -it --net nat mcr.microsoft.com/windows/nanoserver:ltsc2022
