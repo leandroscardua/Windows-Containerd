@@ -19,19 +19,19 @@
 [CmdletBinding()]
 param(
 
-  [Parameter(Mandatory=$true)]
+  [ValidateNotNullOrEmpty()]
   [String]$tagcd = ((Invoke-WebRequest -UseBasicParsing "https://api.github.com/repos/containerd/containerd/releases/latest" | ConvertFrom-Json)[0].tag_name -replace "v",""),
 
-  [Parameter(Mandatory=$true)]
+  [ValidateNotNullOrEmpty()]
   [String]$tagcni = ((Invoke-WebRequest -UseBasicParsing "https://api.github.com/repos/microsoft/windows-container-networking/releases/latest" | ConvertFrom-Json)[0].tag_name -replace "v",""),
 
-  [Parameter(Mandatory=$true)]
+  [ValidateNotNullOrEmpty()]
   [String]$tagnerdctl = ((Invoke-WebRequest -UseBasicParsing "https://api.github.com/repos/containerd/nerdctl/releases/latest" | ConvertFrom-Json)[0].tag_name -replace "v",""),
 
-  [Parameter(Mandatory=$true)]
+  [ValidateNotNullOrEmpty()]
   [String]$subnet='10.0.0.0/24',
 
-  [Parameter(Mandatory=$true)]
+  [ValidateNotNullOrEmpty()]
   [String]$gateway='10.0.0.1'
 
 )
