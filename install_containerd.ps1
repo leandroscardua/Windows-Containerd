@@ -69,15 +69,13 @@ function DownloadFile {
 
 }
 
-
-Write-Host "Creating folder on $destination" -ForegroundColor DarkCyan
 $destination="$Env:ProgramFiles\containerd"
+Write-Host "Creating folder on $destination" -ForegroundColor DarkCyan
 mkdir -force $destination | Out-Null
 Set-Location $destination
 
 
 Write-Host "Downloading ContainerD to $destination" -ForegroundColor DarkCyan
-# Invoke-WebRequest "https://github.com/containerd/containerd/releases/download/v$tagcd/containerd-$tagcd-windows-amd64.tar.gz" -UseBasicParsing -OutFile $destination\containerd-$tagcd-windows-amd64.tar.gz
 DownloadFile "https://github.com/containerd/containerd/releases/download/v$tagcd/containerd-$tagcd-windows-amd64.tar.gz" "$destination\containerd-$tagcd-windows-amd64.tar.gz"
 Write-Host "Saving containerd on $destination" -ForegroundColor DarkCyan
 
@@ -100,13 +98,12 @@ Start-Service containerd
 Write-Host "Downloading Windows CNI to $destination\cni\bin" -ForegroundColor DarkCyan
 
 mkdir -force $destination\cni\bin | Out-Null
-Set-Location $destination\cni\bin 
-# Invoke-WebRequest "https://github.com/microsoft/windows-container-networking/releases/download/v$tagcni/windows-container-networking-cni-amd64-v$tagcni.zip" -UseBasicParsing -OutFile "$destination\cni\bin\windows-container-networking-cni-amd64-v$tagcni.zip"
+Set-Location $destination\cni\bin
 DownloadFile "https://github.com/microsoft/windows-container-networking/releases/download/v$tagcni/windows-container-networking-cni-amd64-v$tagcni.zip" "$destination\cni\bin\windows-container-networking-cni-amd64-v$tagcni.zip"
 
 Write-Host "Saving Windows CNI on $destination" -ForegroundColor DarkCyan
 
-tar.exe -xf $destination\cni\bin\windows-container-networking-cni-amd64-$tagcni.zip
+tar.exe -xf $destination\cni\bin\windows-container-networking-cni-amd64-v$tagcni.zip
 
 Write-Host "Downloading nerdctl to $destination" -ForegroundColor DarkCyan
 
@@ -114,11 +111,11 @@ Set-Location $destination
 Invoke-WebRequest "https://github.com/containerd/nerdctl/releases/download/v$tagnerdctl/nerdctl-$tagnerdctl-windows-amd64.tar.gz" -UseBasicParsing -OutFile $destination\nerdctl-$tagnerdctl-windows-amd64.tar.gz
 
 Write-Host "Saving nerdctl on $destination" -ForegroundColor DarkCya
+
 tar.exe -xf $destination\nerdctl-$tagnerdctl-windows-amd64.tar.gz
 
 Write-Host "Downloading HNS Powershell Module" -ForegroundColor DarkCyan
 
-# curl.exe -LO 'https://raw.githubusercontent.com/microsoft/SDN/master/Kubernetes/windows/hns.psm1'
 DownloadFile "https://raw.githubusercontent.com/microsoft/SDN/master/Kubernetes/windows/hns.psm1" $destination\hns.psm1
 Import-Module .\hns.psm1
 
