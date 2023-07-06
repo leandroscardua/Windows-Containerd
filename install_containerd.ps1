@@ -116,7 +116,7 @@ Write-Host "Creating New NAT Network" -ForegroundColor DarkCyan
 
 New-HnsNetwork -Type NAT -AddressPrefix $subnet -Gateway $gateway -Name "nat"
 
-Write-Host "Configuring network on nerdctl" -ForegroundColor DarkCyan
+Write-Host "Configuring network on nerdctl using NAT Network" -ForegroundColor DarkCyan
 
 mkdir -Force "$env:ProgramFiles\containerd\cni\conf\"| Out-Null
 
@@ -141,12 +141,12 @@ mkdir -Force "$env:ProgramFiles\containerd\cni\conf\"| Out-Null
 }
 "@ | Set-Content "$env:ProgramFiles\containerd\cni\conf\0-containerd-nat.conf" -Force
 
-# #Remove-Item "$env:ProgramFiles\containerd\cni\conf\nerdctl-nat.conflist" -Force
 
+# Download nanoserver version ltsc2022 image
 
-#.\nerdctl.exe run --net nat mcr.microsoft.com/windows/nanoserver:ltsc2022
+# .\nerdctl.exe pull mcr.microsoft.com/windows/nanoserver:ltsc2022
 
-.\nerdctl.exe pull mcr.microsoft.com/windows/nanoserver:ltsc2022
+# Run a test container using the nanoserver version ltsc2022 image
 
-.\nerdctl.exe run -it --net nat mcr.microsoft.com/windows/nanoserver:ltsc2022
+# .\nerdctl.exe run -it --net nat mcr.microsoft.com/windows/nanoserver:ltsc2022
 
