@@ -1,13 +1,12 @@
-##############################################################################################
-# Script to install and configure windows container with containerD, Nerdctl and WCN for CNI #
-##############################################################################################
-
 <#
     .SYNOPSIS
-        Installs the prerequisites for creating Windows containers with containerd, nerdctl and windows-container-networking
+        Script to install and configure windows container with containerD, nerdctl and WCN for CNI 
 
     .DESCRIPTION
         Installs the prerequisites for creating Windows containers with containerd, nerdctl and windows-container-networking, using the latest available version
+
+    .LINK
+        https://raw.githubusercontent.com/leandroscardua/Windows-Containerd/master/install_containerd.ps1
 
     .EXAMPLE
         curl.exe -LO https://raw.githubusercontent.com/leandroscardua/Windows-Containerd/master/install_containerd.ps1
@@ -39,12 +38,6 @@ param(
 
 Write-Host "Checking the latest version of containerd and Windows CNI" -ForegroundColor DarkCyan 
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-# $tagcd = (Invoke-WebRequest -UseBasicParsing "https://api.github.com/repos/containerd/containerd/releases/latest" | ConvertFrom-Json)[0].tag_name -replace "v",""
-#$tagcni = (Invoke-WebRequest -UseBasicParsing "https://api.github.com/repos/microsoft/windows-container-networking/releases/latest" | ConvertFrom-Json)[0].tag_name -replace "v",""
-# $tagnerdctl = (Invoke-WebRequest -UseBasicParsing "https://api.github.com/repos/containerd/nerdctl/releases/latest" | ConvertFrom-Json)[0].tag_name -replace "v",""
-# $subnet='10.0.0.0/24'
-# $gateway='10.0.0.1'
-
 
 Write-Host "Checking for the Windows Feature is already installed" -ForegroundColor DarkCyan
 
