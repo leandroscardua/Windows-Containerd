@@ -58,6 +58,18 @@ exit
 }
 
 
+function DownloadFile {
+
+    param (
+        [String]$source,
+        [String]$outfile
+    )
+
+    Invoke-WebRequest $source -UseBasicParsing -OutFile $outfile
+
+}
+
+
 Write-Host "Creating folder on $destination" -ForegroundColor DarkCyan
 $destination="$Env:ProgramFiles\containerd"
 mkdir -force $destination | Out-Null
@@ -65,23 +77,23 @@ Set-Location $destination
 
 
 Write-Host "Downloading ContainerD to $destination" -ForegroundColor DarkCyan
-Invoke-WebRequest "https://github.com/containerd/containerd/releases/download/v$tagcd/containerd-$tagcd-windows-amd64.tar.gz" -UseBasicParsing -OutFile $destination\containerd-$tagcd-windows-amd64.tar.gz
-
+# Invoke-WebRequest "https://github.com/containerd/containerd/releases/download/v$tagcd/containerd-$tagcd-windows-amd64.tar.gz" -UseBasicParsing -OutFile $destination\containerd-$tagcd-windows-amd64.tar.gz
+DownloadFile "https://github.com/containerd/containerd/releases/download/v$tagcd/containerd-$tagcd-windows-amd64.tar.gz" "$destination\containerd-$tagcd-windows-amd64.tar.gz"
 Write-Host "Saving containerd on $destination" -ForegroundColor DarkCyan
 
 tar.exe -xf .\containerd-$tagcd-windows-amd64.tar.gz
 
 Copy-Item -Path "$destination\bin\*" -Destination $destination -Recurse -Force
 
-Write-Host "creating containerd config file" -ForegroundColor DarkCyan
+Write-Host "Creating containerd config file" -ForegroundColor DarkCyan
 
 .\containerd.exe config default | Out-File config.toml -Encoding ascii
 
-Write-Host "registering containerd as a service" -ForegroundColor DarkCyan
+Write-Host "Registering containerd as a service" -ForegroundColor DarkCyan
 
 .\containerd.exe --register-service
 
-Write-Host "starting containerd service" -ForegroundColor DarkCyan
+Write-Host "Starting containerd service" -ForegroundColor DarkCyan
 
 Start-Service containerd
 
@@ -89,8 +101,9 @@ Write-Host "Downloading Windows CNI to $destination\cni\bin" -ForegroundColor Da
 
 mkdir -force $destination\cni\bin | Out-Null
 Set-Location $destination\cni\bin 
-Invoke-WebRequest "https://github.com/microsoft/windows-container-networking/releases/download/v$tagcni/windows-container-networking-cni-amd64-v$tagcni.zip" -UseBasicParsing -OutFile "$destination\cni\bin\windows-container-networking-cni-amd64-v$tagcni.zip"
-                   
+# Invoke-WebRequest "https://github.com/microsoft/windows-container-networking/releases/download/v$tagcni/windows-container-networking-cni-amd64-v$tagcni.zip" -UseBasicParsing -OutFile "$destination\cni\bin\windows-container-networking-cni-amd64-v$tagcni.zip"
+DownloadFile "https://github.com/microsoft/windows-container-networking/releases/download/v$tagcni/windows-container-networking-cni-amd64-v$tagcni.zip" "$destination\cni\bin\windows-container-networking-cni-amd64-v$tagcni.zip"
+
 Write-Host "Saving Windows CNI on $destination" -ForegroundColor DarkCyan
 
 tar.exe -xf $destination\cni\bin\windows-container-networking-cni-amd64-$tagcni.zip
@@ -103,16 +116,17 @@ Invoke-WebRequest "https://github.com/containerd/nerdctl/releases/download/v$tag
 Write-Host "Saving nerdctl on $destination" -ForegroundColor DarkCya
 tar.exe -xf $destination\nerdctl-$tagnerdctl-windows-amd64.tar.gz
 
-Write-Host "Install HNS Powershell Module" -ForegroundColor DarkCyan
+Write-Host "Downloading HNS Powershell Module" -ForegroundColor DarkCyan
 
-curl.exe -LO 'https://raw.githubusercontent.com/microsoft/SDN/master/Kubernetes/windows/hns.psm1'
+# curl.exe -LO 'https://raw.githubusercontent.com/microsoft/SDN/master/Kubernetes/windows/hns.psm1'
+DownloadFile "https://raw.githubusercontent.com/microsoft/SDN/master/Kubernetes/windows/hns.psm1" $destination\hns.psm1
 Import-Module .\hns.psm1
 
-Write-Host "creating New NAT Network" -ForegroundColor DarkCyan
+Write-Host "Creating New NAT Network" -ForegroundColor DarkCyan
 
 New-HnsNetwork -Type NAT -AddressPrefix $subnet -Gateway $gateway -Name "nat"
 
-Write-Host "configuring network on nerdctl" -ForegroundColor DarkCyan
+Write-Host "Configuring network on nerdctl" -ForegroundColor DarkCyan
 
 mkdir -Force "$env:ProgramFiles\containerd\cni\conf\"| Out-Null
 
@@ -142,7 +156,7 @@ mkdir -Force "$env:ProgramFiles\containerd\cni\conf\"| Out-Null
 
 #.\nerdctl.exe run --net nat mcr.microsoft.com/windows/nanoserver:ltsc2022
 
-#.\nerdctl.exe pull mcr.microsoft.com/windows/nanoserver:ltsc2022
+.\nerdctl.exe pull mcr.microsoft.com/windows/nanoserver:ltsc2022
 
-#nerdctl.exe run -it --net nat mcr.microsoft.com/windows/nanoserver:ltsc2022
+.\nerdctl.exe run -it --net nat mcr.microsoft.com/windows/nanoserver:ltsc2022
 
