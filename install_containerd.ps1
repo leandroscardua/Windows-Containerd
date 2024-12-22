@@ -21,8 +21,12 @@ param(
   [ValidateNotNullOrEmpty()]
   [String]$tagcd = ((Invoke-WebRequest -UseBasicParsing "https://api.github.com/repos/containerd/containerd/releases/latest" | ConvertFrom-Json)[0].tag_name -replace "v",""),
 
+  # [ValidateNotNullOrEmpty()]
+  # [String]$tagcni = ((Invoke-WebRequest -UseBasicParsing "https://api.github.com/repos/microsoft/windows-container-networking/releases/latest" | ConvertFrom-Json)[0].tag_name -replace "v",""),
+  # incompability with containerD verion 2.0.2
+  
   [ValidateNotNullOrEmpty()]
-  [String]$tagcni = ((Invoke-WebRequest -UseBasicParsing "https://api.github.com/repos/microsoft/windows-container-networking/releases/latest" | ConvertFrom-Json)[0].tag_name -replace "v",""),
+  [String]$tagcni = "0.3.0",
 
   [ValidateNotNullOrEmpty()]
   [String]$tagnerdctl = ((Invoke-WebRequest -UseBasicParsing "https://api.github.com/repos/containerd/nerdctl/releases/latest" | ConvertFrom-Json)[0].tag_name -replace "v",""),
